@@ -1,33 +1,60 @@
-const taskInput = document.getElementById("taskInput");
-const taskList = document.getElementById("taskList");
+// Create container
+const mainDiv = document.createElement("div");
+mainDiv.className = "main-container";
+document.body.appendChild(mainDiv);
 
-function addTask() {
-  const taskText = taskInput.value.trim();
-  if (!taskText) return;
+// Input & Add button
+const inputDiv = document.createElement("div");
+const inputData = document.createElement("input");
+inputData.type = "text";
+inputData.placeholder = "Enter task";
+
+const addBtn = document.createElement("button");
+addBtn.innerText = "Add";
+addBtn.addEventListener("click", handleAddTask);
+
+inputDiv.appendChild(inputData);
+inputDiv.appendChild(addBtn);
+mainDiv.appendChild(inputDiv);
+
+// Task list container
+const ul = document.createElement("ul");
+mainDiv.appendChild(ul);
+
+// Function to handle adding tasks
+function handleAddTask() {
+  const taskText = inputData.value.trim();
+  if (taskText === "") return;
 
   const li = document.createElement("li");
-
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.onchange = () => li.classList.toggle("completed");
+  li.className = "li-listed";
 
   const span = document.createElement("span");
-  span.textContent = taskText;
+  span.innerText = taskText;
 
+  // Edit button
   const editBtn = document.createElement("button");
-  editBtn.textContent = "✏️";
-  editBtn.onclick = () => {
-    const newText = prompt("Edit task:", span.textContent);
-    if (newText && newText.trim() !== "") {
-      span.textContent = newText.trim();
+  editBtn.className = "icon-btn edit";
+  editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+  editBtn.addEventListener("click", () => {
+    const newTask = prompt("Edit task:", span.innerText);
+    if (newTask !== null && newTask.trim() !== "") {
+      span.innerText = newTask.trim();
     }
-  };
+  });
 
-  const deleteBtn = document.createElement("button");
-  deleteBtn.textContent = "🗑️";
-  deleteBtn.onclick = () => li.remove();
+  // Delete button
+  const delBtn = document.createElement("button");
+  delBtn.className = "icon-btn delete";
+  delBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+  delBtn.addEventListener("click", () => {
+    ul.removeChild(li);
+  });
 
-  li.append(checkbox, span, editBtn, deleteBtn);
-  taskList.appendChild(li);
-  taskInput.value = "";
+  li.appendChild(span);
+  li.appendChild(editBtn);
+  li.appendChild(delBtn);
+  ul.appendChild(li);
+
+  inputData.value = ""; // Clear input
 }
